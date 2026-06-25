@@ -161,10 +161,10 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Таблетки — временно недоступно -->
+                <!-- Таблетки -->
                 <Button Style="{StaticResource TileStyle}" Background="#B71C1C"
-                        Click="LaunchMeds" Opacity="0.45"
-                        ToolTip="{DynamicResource TileComingSoon}">
+                        Click="LaunchMeds"
+                        ToolTip="{DynamicResource TileMedsTip}">
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="💊" FontSize="44" HorizontalAlignment="Center"/>
                         <TextBlock Text="{DynamicResource TileMeds}"

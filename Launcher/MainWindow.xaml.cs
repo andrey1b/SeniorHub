@@ -39,13 +39,12 @@ public partial class MainWindow : Window
 
         ["TakingMedications"] = new AppConfig(
             ResKey: "TileMeds",
-            GitHubRepo: null,
-            ExeName: "TakingMedications.exe",
+            GitHubRepo: "andrey1b/Medication",
+            ExeName: "Medication.exe",
             DevPaths: [
                 @"TakingMedications\bin\Release\net9.0-windows\TakingMedications.exe",
                 @"TakingMedications\bin\Debug\net9.0-windows\TakingMedications.exe",
-            ],
-            IsDisabled: true),
+            ]),
 
         ["TextToAudiobook"] = new AppConfig(
             ResKey: "TileAudio",
