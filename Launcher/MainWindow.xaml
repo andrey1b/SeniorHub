@@ -179,10 +179,10 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Аудиокниги — временно недоступно -->
+                <!-- Аудиокниги -->
                 <Button Style="{StaticResource TileStyle}" Background="#E65100"
-                        Click="LaunchAudio" Opacity="0.45"
-                        ToolTip="{DynamicResource TileComingSoon}">
+                        Click="LaunchAudio"
+                        ToolTip="{DynamicResource TileAudioTip}">
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="🎧" FontSize="44" HorizontalAlignment="Center"/>
                         <TextBlock Text="{DynamicResource TileAudio}"

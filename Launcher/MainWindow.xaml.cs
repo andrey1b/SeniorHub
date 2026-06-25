@@ -49,13 +49,12 @@ public partial class MainWindow : Window
 
         ["TextToAudiobook"] = new AppConfig(
             ResKey: "TileAudio",
-            GitHubRepo: null,
+            GitHubRepo: "andrey1b/Text-to-Audiobook",
             ExeName: "TextToAudiobookCSharp.exe",
             DevPaths: [
                 @"TextToAudiobook\bin\Release\net9.0-windows\TextToAudiobookCSharp.exe",
                 @"TextToAudiobook\bin\Debug\net9.0-windows\TextToAudiobookCSharp.exe",
-            ],
-            IsDisabled: true),
+            ]),
     };
 
     private readonly string? _appsRoot = ResolveAppsRoot();
