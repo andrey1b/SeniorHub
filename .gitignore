@@ -1,0 +1,14 @@
+## .NET build artifacts
+bin/
+obj/
+dist_setup/
+dist_publish/
+
+## User-specific files
+*.user
+*.suo
+.vs/
+
+## OS
+Thumbs.db
+.DS_Store

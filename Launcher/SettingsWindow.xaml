@@ -1,0 +1,108 @@
+<Window x:Class="OfisPensionera.Launcher.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource SettingsTitle}"
+        Height="290" Width="300"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#F5F5F5"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <Style x:Key="GreenBtn" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#2C5F2D"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#245020"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1B3D18"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Border Grid.Row="0" Background="#2C5F2D" Padding="16,10">
+            <TextBlock Text="{DynamicResource SettingsTitle}"
+                       FontFamily="Segoe UI" FontSize="16" FontWeight="Bold"
+                       Foreground="White"/>
+        </Border>
+
+        <!-- Тело -->
+        <StackPanel Grid.Row="1" Margin="20,16,20,0">
+
+            <!-- Язык -->
+            <TextBlock Text="{DynamicResource SettingsLangLabel}"
+                       FontFamily="Segoe UI" FontSize="12"
+                       Foreground="#555555" Margin="0,0,0,10"/>
+            <RadioButton x:Name="rbRu" Content="Русский"
+                         GroupName="Lang"
+                         FontFamily="Segoe UI" FontSize="13"
+                         Margin="4,0,0,8" Cursor="Hand"/>
+            <RadioButton x:Name="rbEn" Content="English"
+                         GroupName="Lang"
+                         FontFamily="Segoe UI" FontSize="13"
+                         Margin="4,0,0,0" Cursor="Hand"/>
+
+            <!-- Разделитель -->
+            <Separator Margin="0,16,0,12"/>
+
+            <!-- Обновления -->
+            <TextBlock Text="{DynamicResource UpdatesGroupLabel}"
+                       FontFamily="Segoe UI" FontSize="12"
+                       Foreground="#555555" Margin="0,0,0,10"/>
+            <Button x:Name="btnCheckUpdates"
+                    Content="{DynamicResource BtnCheckUpdates}"
+                    Style="{StaticResource GreenBtn}"
+                    Click="CheckUpdates_Click"
+                    Height="28" Padding="12,0"
+                    HorizontalAlignment="Left"
+                    FontFamily="Segoe UI" FontSize="12"/>
+
+        </StackPanel>
+
+        <!-- Подвал -->
+        <Border Grid.Row="2" Background="#E8E8E8"
+                BorderBrush="#CCCCCC" BorderThickness="0,1,0,0"
+                Padding="12,8">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{DynamicResource SettingsCancel}"
+                        Click="Cancel_Click"
+                        Width="80" Height="28" Margin="0,0,8,0"
+                        FontFamily="Segoe UI" FontSize="11"
+                        Cursor="Hand"/>
+                <Button Content="{DynamicResource SettingsApply}"
+                        Style="{StaticResource GreenBtn}"
+                        Click="Apply_Click"
+                        Width="80" Height="28" Padding="0"
+                        FontFamily="Segoe UI" FontSize="11"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

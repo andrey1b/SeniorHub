@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Шапка -->
+    <sys:String x:Key="AppTitle">Офис пенсионера</sys:String>
+    <sys:String x:Key="AppSubtitle">Пять программ — всё что нужно каждый день</sys:String>
+
+    <!-- Плитки -->
+    <sys:String x:Key="TileFood">Еда</sys:String>
+    <sys:String x:Key="TileFoodSub">Меню и рацион</sys:String>
+    <sys:String x:Key="TileFoodTip">Планировщик питания и меню</sys:String>
+
+    <sys:String x:Key="TileGarden">Огород</sys:String>
+    <sys:String x:Key="TileGardenSub">Планировщик грядок</sys:String>
+    <sys:String x:Key="TileGardenTip">Планировщик огорода — грядки, севооборот, лунный календарь</sys:String>
+
+    <sys:String x:Key="TileMoney">Деньги</sys:String>
+    <sys:String x:Key="TileMoneySub">Чеки и расходы</sys:String>
+    <sys:String x:Key="TileMoneyTip">Чеки → учёт домашних расходов</sys:String>
+
+    <sys:String x:Key="TileMeds">Таблетки</sys:String>
+    <sys:String x:Key="TileMedsSub">Приём лекарств</sys:String>
+    <sys:String x:Key="TileMedsTip">Расписание приёма лекарств, напоминания</sys:String>
+
+    <sys:String x:Key="TileAudio">Аудиокниги</sys:String>
+    <sys:String x:Key="TileAudioSub">Текст в речь</sys:String>
+    <sys:String x:Key="TileAudioTip">Конвертер текста в аудиокниги</sys:String>
+
+    <!-- Подвал -->
+    <sys:String x:Key="VersionLabel">Версия</sys:String>
+    <sys:String x:Key="FooterInfo">Все данные хранятся локально на этом компьютере</sys:String>
+
+    <!-- Настройки -->
+    <sys:String x:Key="SettingsTip">Настройки</sys:String>
+    <sys:String x:Key="SettingsTitle">Настройки</sys:String>
+    <sys:String x:Key="SettingsLangLabel">Язык интерфейса</sys:String>
+    <sys:String x:Key="SettingsApply">Применить</sys:String>
+    <sys:String x:Key="SettingsCancel">Отмена</sys:String>
+    <sys:String x:Key="BtnCheckUpdates">Проверить обновления</sys:String>
+    <sys:String x:Key="UpdatesGroupLabel">Обновления</sys:String>
+
+    <!-- Заглушки -->
+    <sys:String x:Key="TileComingSoon">Скоро будет доступно</sys:String>
+    <sys:String x:Key="MsgNoUpdates">Обновлений нет. У вас установлена последняя версия.</sys:String>
+
+</ResourceDictionary>

@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/apps/" />
+  <Folder Name="/apps/Food/">
+    <Project Path="apps/Food/MenuApp/MenuApp.csproj" />
+  </Folder>
+  <Folder Name="/apps/HomeB/">
+    <Project Path="apps/HomeB/HomeBudgetReceipts/HomeBudgetReceipts.csproj" />
+  </Folder>
+  <Folder Name="/apps/TakingMedications/">
+    <Project Path="apps/TakingMedications/TakingMedications/TakingMedications.csproj" />
+  </Folder>
+  <Folder Name="/apps/TextToAudiobook/">
+    <Project Path="apps/TextToAudiobook/TextToAudiobookCSharp.csproj" />
+  </Folder>
+  <Project Path="Launcher/Launcher.csproj" />
+</Solution>
