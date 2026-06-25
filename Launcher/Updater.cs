@@ -69,12 +69,15 @@ static class Updater
 
             string dest = Path.Combine(Path.GetTempPath(), asset.Name);
 
-            using var response = await Http.GetAsync(asset.BrowserDownloadUrl,
-                HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-
-            await using var fs = File.Create(dest);
-            await response.Content.CopyToAsync(fs);
+            using (var response = await Http.GetAsync(asset.BrowserDownloadUrl,
+                       HttpCompletionOption.ResponseHeadersRead))
+            {
+                response.EnsureSuccessStatusCode();
+                // Файл закрываем сразу после записи — иначе installer не запустится
+                // («файл занят другим процессом»), т.к. лаунчер держит его открытым.
+                await using var fs = File.Create(dest);
+                await response.Content.CopyToAsync(fs);
+            }
 
             Process.Start(new ProcessStartInfo(dest) { UseShellExecute = true });
             return true;
