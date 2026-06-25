@@ -1,5 +1,5 @@
 #define MyAppName "SeniorHub"
-#define MyAppVersion "1.0.6"
+#define MyAppVersion "1.0.7"
 #define MyAppPublisher "andrey1b"
 #define MyAppURL "https://github.com/andrey1b/SeniorHub"
 #define MyAppExeName "SeniorHub.exe"
@@ -17,6 +17,8 @@ AppUpdatesURL={#MyAppURL}/releases
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
+SetupIconFile=Launcher\app.ico
+UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=C:\Users\User\Opus 4.6\Senior Hub\Distributions\SeniorHub v.{#MyAppVersion}
 OutputBaseFilename=SeniorHub_Setup_v{#MyAppVersion}
 Compression=lzma

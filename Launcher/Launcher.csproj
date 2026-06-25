@@ -7,12 +7,17 @@
     <RootNamespace>OfisPensionera.Launcher</RootNamespace>
     <AssemblyTitle>Офис пенсионера</AssemblyTitle>
     <Product>Офис пенсионера</Product>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <Optimize>true</Optimize>
+    <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.6" />
