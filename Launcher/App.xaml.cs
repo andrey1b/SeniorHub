@@ -8,8 +8,8 @@ public partial class App : Application
 {
     public static string CurrentLanguage { get; private set; } = "ru";
 
-    // JSON-файл настроек оставляем для обратной совместимости
-    private static readonly string SettingsPath = Path.Combine(
+    // Путь к legacy-файлу настроек — нужен только для одноразовой миграции
+    private static readonly string LegacySettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "OfisPensionera", "settings.json");
 
@@ -17,14 +17,15 @@ public partial class App : Application
     {
         base.OnStartup(e);
         SharedDb.Initialize();
-        ApplyLanguage(LoadSavedLanguage());
+        MigrateLegacySettings();
+        var savedLang = SharedDb.GetSetting("language");
+        ApplyLanguage(savedLang == "en" || savedLang == "ru" ? savedLang : "ru");
     }
 
     public static void SetLanguage(string lang)
     {
         ApplyLanguage(lang);
         SharedDb.SetSetting("language", lang);
-        SaveLegacyJson(lang);
     }
 
     public static void ApplyLanguage(string lang)
@@ -41,35 +42,20 @@ public partial class App : Application
         merged.Add(dict);
     }
 
-    private static string LoadSavedLanguage()
-    {
-        // Сначала общая база, потом legacy JSON
-        var fromDb = SharedDb.GetSetting("language");
-        if (fromDb == "en" || fromDb == "ru") return fromDb;
-        return LoadLegacyJson();
-    }
-
-    private static string LoadLegacyJson()
+    // Одноразовая миграция: читает старый JSON, сохраняет в SharedDb, удаляет файл
+    private static void MigrateLegacySettings()
     {
         try
         {
-            if (File.Exists(SettingsPath))
+            if (!File.Exists(LegacySettingsPath)) return;
+            var doc = JsonDocument.Parse(File.ReadAllText(LegacySettingsPath));
+            if (doc.RootElement.TryGetProperty("language", out var el))
             {
-                var doc = JsonDocument.Parse(File.ReadAllText(SettingsPath));
-                if (doc.RootElement.TryGetProperty("language", out var el))
-                    return el.GetString() == "en" ? "en" : "ru";
+                var lang = el.GetString();
+                if ((lang == "en" || lang == "ru") && SharedDb.GetSetting("language") is null)
+                    SharedDb.SetSetting("language", lang);
             }
-        }
-        catch { }
-        return "ru";
-    }
-
-    private static void SaveLegacyJson(string lang)
-    {
-        try
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
-            File.WriteAllText(SettingsPath, $"{{\"language\":\"{lang}\"}}");
+            File.Delete(LegacySettingsPath);
         }
         catch { }
     }
