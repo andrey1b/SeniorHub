@@ -69,6 +69,7 @@ public partial class MainWindow : Window
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         RefreshVersionText();
+        RefreshSubtitle();
         // автопроверка обновлений в фоне (результат не нужен — диалог показывает сам Updater)
         _ = await Updater.CheckSeniorHubUpdateAsync();
     }
@@ -79,10 +80,26 @@ public partial class MainWindow : Window
         tbVersion.Text = $"{Res("VersionLabel")} {ver.Major}.{ver.Minor}.{ver.Build}";
     }
 
+    internal void RefreshSubtitle()
+    {
+        var (name, _) = SharedDb.GetUserProfile();
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            tbSubtitle.Text = App.CurrentLanguage == "en"
+                ? $"Welcome, {name}!"
+                : $"Добро пожаловать, {name}!";
+        }
+        else
+        {
+            tbSubtitle.Text = Res("AppSubtitle");
+        }
+    }
+
     private void OpenSettings(object sender, RoutedEventArgs e)
     {
         new SettingsWindow { Owner = this }.ShowDialog();
         RefreshVersionText();
+        RefreshSubtitle();
     }
 
     // ── обработчики плиток ───────────────────────────────────────────────────

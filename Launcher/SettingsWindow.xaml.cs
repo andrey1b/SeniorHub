@@ -9,10 +9,17 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         rbRu.IsChecked = App.CurrentLanguage == "ru";
         rbEn.IsChecked = App.CurrentLanguage == "en";
+
+        var (name, birthDate) = SharedDb.GetUserProfile();
+        tbName.Text  = name      ?? "";
+        tbBirth.Text = birthDate ?? "";
     }
 
     private void Apply_Click(object sender, RoutedEventArgs e)
     {
+        SharedDb.SetUserProfile(
+            string.IsNullOrWhiteSpace(tbName.Text)  ? null : tbName.Text.Trim(),
+            string.IsNullOrWhiteSpace(tbBirth.Text) ? null : tbBirth.Text.Trim());
         App.SetLanguage(rbEn.IsChecked == true ? "en" : "ru");
         DialogResult = true;
     }

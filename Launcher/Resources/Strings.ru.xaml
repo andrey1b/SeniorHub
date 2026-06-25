@@ -40,6 +40,11 @@
     <sys:String x:Key="BtnCheckUpdates">Проверить обновления</sys:String>
     <sys:String x:Key="UpdatesGroupLabel">Обновления</sys:String>
 
+    <!-- Профиль пользователя -->
+    <sys:String x:Key="ProfileGroupLabel">Профиль пользователя</sys:String>
+    <sys:String x:Key="ProfileNameLabel">Имя</sys:String>
+    <sys:String x:Key="ProfileBirthLabel">Дата рождения (ДД.ММ.ГГГГ)</sys:String>
+
     <!-- Заглушки -->
     <sys:String x:Key="TileComingSoon">Скоро будет доступно</sys:String>
     <sys:String x:Key="MsgNoUpdates">Обновлений нет. У вас установлена последняя версия.</sys:String>

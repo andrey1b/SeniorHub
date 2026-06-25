@@ -40,6 +40,11 @@
     <sys:String x:Key="BtnCheckUpdates">Check for updates</sys:String>
     <sys:String x:Key="UpdatesGroupLabel">Updates</sys:String>
 
+    <!-- User profile -->
+    <sys:String x:Key="ProfileGroupLabel">User Profile</sys:String>
+    <sys:String x:Key="ProfileNameLabel">Name</sys:String>
+    <sys:String x:Key="ProfileBirthLabel">Date of birth (DD.MM.YYYY)</sys:String>
+
     <!-- Stubs -->
     <sys:String x:Key="TileComingSoon">Coming soon</sys:String>
     <sys:String x:Key="MsgNoUpdates">No updates available. You have the latest version.</sys:String>

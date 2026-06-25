@@ -8,6 +8,7 @@ public partial class App : Application
 {
     public static string CurrentLanguage { get; private set; } = "ru";
 
+    // JSON-файл настроек оставляем для обратной совместимости
     private static readonly string SettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "OfisPensionera", "settings.json");
@@ -15,13 +16,15 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        SharedDb.Initialize();
         ApplyLanguage(LoadSavedLanguage());
     }
 
     public static void SetLanguage(string lang)
     {
         ApplyLanguage(lang);
-        SaveLanguage(lang);
+        SharedDb.SetSetting("language", lang);
+        SaveLegacyJson(lang);
     }
 
     public static void ApplyLanguage(string lang)
@@ -40,6 +43,14 @@ public partial class App : Application
 
     private static string LoadSavedLanguage()
     {
+        // Сначала общая база, потом legacy JSON
+        var fromDb = SharedDb.GetSetting("language");
+        if (fromDb == "en" || fromDb == "ru") return fromDb;
+        return LoadLegacyJson();
+    }
+
+    private static string LoadLegacyJson()
+    {
         try
         {
             if (File.Exists(SettingsPath))
@@ -53,7 +64,7 @@ public partial class App : Application
         return "ru";
     }
 
-    private static void SaveLanguage(string lang)
+    private static void SaveLegacyJson(string lang)
     {
         try
         {

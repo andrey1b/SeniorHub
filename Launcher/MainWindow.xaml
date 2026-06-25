@@ -92,7 +92,7 @@
                     <TextBlock Text="{DynamicResource AppTitle}"
                                FontFamily="Segoe UI" FontSize="26" FontWeight="Bold"
                                Foreground="White"/>
-                    <TextBlock Text="{DynamicResource AppSubtitle}"
+                    <TextBlock x:Name="tbSubtitle"
                                FontFamily="Segoe UI" FontSize="13"
                                Foreground="#A8D5A9" Margin="0,3,0,0"/>
                 </StackPanel>
