@@ -11,6 +11,13 @@ static class SharedDb
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "SeniorHub", "shared.db");
 
+    // Папка для автоматических ежедневных копий
+    private static readonly string BackupsDir = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "SeniorHub", "Backups");
+
+    private const int KeepDailyBackups = 7;   // сколько последних копий хранить
+
     private static string ConnStr => $"Data Source={DbPath}";
 
     public static void Initialize()
@@ -116,5 +123,77 @@ static class SharedDb
         var conn = new SqliteConnection(ConnStr);
         conn.Open();
         return conn;
+    }
+
+    // ── Резервное копирование ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Тихая автоматическая копия базы при запуске: одна копия в день,
+    /// хранится последние <see cref="KeepDailyBackups"/> штук. Ошибки
+    /// проглатываются — резервное копирование не должно мешать работе.
+    /// </summary>
+    public static void AutoBackup()
+    {
+        try
+        {
+            if (!File.Exists(DbPath)) return;
+            Directory.CreateDirectory(BackupsDir);
+
+            string todayFile = Path.Combine(
+                BackupsDir, $"shared_{DateTime.Now:yyyy-MM-dd}.db");
+
+            // Копию за сегодня уже сделали — выходим
+            if (!File.Exists(todayFile))
+                BackupToFile(todayFile);
+
+            CleanupOldBackups();
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// Ручное сохранение копии в выбранный пользователем файл (флешка,
+    /// «Документы» и т.п.). Бросает исключение при ошибке — вызывающий
+    /// показывает сообщение.
+    /// </summary>
+    public static void ExportTo(string destPath) => BackupToFile(destPath);
+
+    /// <summary>
+    /// Восстановление базы из выбранного файла-копии. Бросает исключение
+    /// при ошибке.
+    /// </summary>
+    public static void RestoreFrom(string sourcePath)
+    {
+        // Источник — файл-копия, приёмник — рабочая база.
+        using var src = new SqliteConnection($"Data Source={sourcePath};Mode=ReadOnly");
+        src.Open();
+        Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
+        using var dst = Open();
+        src.BackupDatabase(dst);
+    }
+
+    // Копирует рабочую базу в указанный файл через безопасный SQLite Backup API
+    // (работает корректно, даже если база открыта другим соединением).
+    private static void BackupToFile(string destPath)
+    {
+        using var src = Open();
+        using var dst = new SqliteConnection($"Data Source={destPath}");
+        dst.Open();
+        src.BackupDatabase(dst);
+    }
+
+    // Оставляет только KeepDailyBackups самых свежих копий, остальные удаляет
+    private static void CleanupOldBackups()
+    {
+        try
+        {
+            var files = Directory.GetFiles(BackupsDir, "shared_*.db");
+            if (files.Length <= KeepDailyBackups) return;
+
+            Array.Sort(files, StringComparer.Ordinal);  // имя с датой → сортировка = хронология
+            for (int i = 0; i < files.Length - KeepDailyBackups; i++)
+                File.Delete(files[i]);
+        }
+        catch { }
     }
 }

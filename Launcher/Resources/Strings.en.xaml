@@ -40,6 +40,18 @@
     <sys:String x:Key="BtnCheckUpdates">Check for updates</sys:String>
     <sys:String x:Key="UpdatesGroupLabel">Updates</sys:String>
 
+    <!-- Backup -->
+    <sys:String x:Key="BackupGroupLabel">Backup</sys:String>
+    <sys:String x:Key="BackupHint">Save a copy of your data to a USB drive or Documents. The program also makes copies automatically every day.</sys:String>
+    <sys:String x:Key="BtnBackup">Save a copy…</sys:String>
+    <sys:String x:Key="BtnRestore">Restore from a copy…</sys:String>
+    <sys:String x:Key="BackupFileFilter">Backup file (*.db)</sys:String>
+    <sys:String x:Key="BackupDone">Backup saved successfully.</sys:String>
+    <sys:String x:Key="BackupFailed">Failed to save the copy:</sys:String>
+    <sys:String x:Key="RestoreConfirm">Current data will be replaced with the data from the copy. Continue?</sys:String>
+    <sys:String x:Key="RestoreDone">Data restored successfully from the copy.</sys:String>
+    <sys:String x:Key="RestoreFailed">Failed to restore from the copy:</sys:String>
+
     <!-- User profile -->
     <sys:String x:Key="ProfileGroupLabel">User Profile</sys:String>
     <sys:String x:Key="ProfileNameLabel">Name</sys:String>

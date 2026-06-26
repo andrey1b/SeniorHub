@@ -17,6 +17,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
         SharedDb.Initialize();
+        SharedDb.AutoBackup();
         MigrateLegacySettings();
         var savedLang = SharedDb.GetSetting("language");
         ApplyLanguage(savedLang == "en" || savedLang == "ru" ? savedLang : "ru");
