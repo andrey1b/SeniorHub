@@ -70,8 +70,29 @@ public partial class MainWindow : Window
     {
         RefreshVersionText();
         RefreshSubtitle();
-        // автопроверка обновлений в фоне (результат не нужен — диалог показывает сам Updater)
+        RefreshTileVersions();
         _ = await Updater.CheckSeniorHubUpdateAsync();
+    }
+
+    private void RefreshTileVersions()
+    {
+        var tiles = new (string Key, System.Windows.Controls.TextBlock Tb)[]
+        {
+            ("Food",              VerFood),
+            ("GardenPlanner",     VerGarden),
+            ("HomeAccounting",    VerMoney),
+            ("TakingMedications", VerMeds),
+            ("TextToAudiobook",   VerAudio),
+        };
+
+        foreach (var (key, tb) in tiles)
+        {
+            var exe = FindExe(Apps[key]);
+            if (exe is null) continue;
+            var vi = FileVersionInfo.GetVersionInfo(exe);
+            if (vi.FileMajorPart == 0 && vi.FileMinorPart == 0) continue;
+            tb.Text = $"v{vi.FileMajorPart}.{vi.FileMinorPart}.{vi.FileBuildPart}";
+        }
     }
 
     internal void RefreshVersionText()

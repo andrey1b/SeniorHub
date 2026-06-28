@@ -123,6 +123,9 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,3,0,0" TextWrapping="Wrap"
                                    TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerFood"
+                                   FontSize="10" Foreground="#B3D4FF" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -141,6 +144,9 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,3,0,0" TextWrapping="Wrap"
                                    TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerGarden"
+                                   FontSize="10" Foreground="#A8D5A9" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -159,6 +165,9 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,3,0,0" TextWrapping="Wrap"
                                    TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerMoney"
+                                   FontSize="10" Foreground="#CE93D8" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -177,6 +186,9 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,3,0,0" TextWrapping="Wrap"
                                    TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerMeds"
+                                   FontSize="10" Foreground="#FFCDD2" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -195,6 +207,9 @@
                                    HorizontalAlignment="Center"
                                    Margin="0,3,0,0" TextWrapping="Wrap"
                                    TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerAudio"
+                                   FontSize="10" Foreground="#FFD0B0" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
