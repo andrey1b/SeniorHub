@@ -6,7 +6,7 @@
         Height="560" Width="860"
         MinHeight="460" MinWidth="680"
         WindowStartupLocation="CenterScreen"
-        Background="#F5F5F5"
+        Background="#D0E8D0"
         ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
@@ -48,7 +48,7 @@
 
         <!-- Кнопка «Настройки» под цвет подвала -->
         <Style x:Key="SettingsBtnStyle" TargetType="Button">
-            <Setter Property="Background" Value="#E8E8E8"/>
+            <Setter Property="Background" Value="#A8C8A8"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="8,3"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -64,10 +64,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#D8D8D8"/>
+                                <Setter Property="Background" Value="#98B898"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#C8C8C8"/>
+                                <Setter Property="Background" Value="#88A888"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -217,24 +217,24 @@
         </ScrollViewer>
 
         <!-- Подвал -->
-        <Border Grid.Row="2" Background="#E8E8E8"
-                BorderBrush="#CCCCCC" BorderThickness="0,1,0,0"
+        <Border Grid.Row="2" Background="#B8D4B8"
+                BorderBrush="#9CBD9C" BorderThickness="0,1,0,0"
                 Padding="20,7">
             <Grid>
                 <TextBlock x:Name="tbVersion"
                            FontFamily="Segoe UI" FontSize="11"
-                           Foreground="#757575" HorizontalAlignment="Left"
+                           Foreground="#3A5A3A" HorizontalAlignment="Left"
                            VerticalAlignment="Center"/>
                 <TextBlock Text="{DynamicResource FooterInfo}"
                            FontFamily="Segoe UI" FontSize="11"
-                           Foreground="#757575" HorizontalAlignment="Center"
+                           Foreground="#3A5A3A" HorizontalAlignment="Center"
                            VerticalAlignment="Center"/>
                 <Button Style="{StaticResource SettingsBtnStyle}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Click="OpenSettings"
                         ToolTip="{DynamicResource SettingsTip}">
-                    <TextBlock Text="⚙" FontSize="15" Foreground="#757575"/>
+                    <TextBlock Text="⚙" FontSize="15" Foreground="#2C5F2D"/>
                 </Button>
             </Grid>
         </Border>
