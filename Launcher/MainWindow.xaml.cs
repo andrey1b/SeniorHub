@@ -54,6 +54,16 @@ public partial class MainWindow : Window
                 @"TextToAudiobook\bin\Release\net9.0-windows\TextToAudiobookCSharp.exe",
                 @"TextToAudiobook\bin\Debug\net9.0-windows\TextToAudiobookCSharp.exe",
             ]),
+
+        ["PdfDrive"] = new AppConfig(
+            ResKey: "TilePdf",
+            GitHubRepo: "andrey1b/PdfDrive",
+            ExeName: "PdfDrive.exe",
+            DevPaths: [
+                @"PdfDrive\bin\Release\net9.0-windows\win-x64\publish\PdfDrive.exe",
+                @"PdfDrive\bin\Release\net9.0-windows\win-x64\PdfDrive.exe",
+                @"PdfDrive\bin\Debug\net9.0-windows\win-x64\PdfDrive.exe",
+            ]),
     };
 
     private readonly string? _appsRoot = ResolveAppsRoot();
@@ -83,6 +93,7 @@ public partial class MainWindow : Window
             ("HomeAccounting",    VerMoney),
             ("TakingMedications", VerMeds),
             ("TextToAudiobook",   VerAudio),
+            ("PdfDrive",          VerPdf),
         };
 
         foreach (var (key, tb) in tiles)
@@ -130,6 +141,7 @@ public partial class MainWindow : Window
     private async void LaunchHomeAccounting(object sender, RoutedEventArgs e)   => await Launch("HomeAccounting");
     private async void LaunchMeds(object sender, RoutedEventArgs e)             => await Launch("TakingMedications");
     private async void LaunchAudio(object sender, RoutedEventArgs e)            => await Launch("TextToAudiobook");
+    private async void LaunchPdf(object sender, RoutedEventArgs e)              => await Launch("PdfDrive");
 
     // ── основная логика ──────────────────────────────────────────────────────
 

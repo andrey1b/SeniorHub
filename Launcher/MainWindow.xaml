@@ -213,6 +213,27 @@
                     </StackPanel>
                 </Button>
 
+                <!-- Документы (PDF Drive) -->
+                <Button Style="{StaticResource TileStyle}" Background="#00838F"
+                        Click="LaunchPdf"
+                        ToolTip="{DynamicResource TilePdfTip}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="📄" FontSize="44" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource TilePdf}"
+                                   FontSize="17" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="{DynamicResource TilePdfSub}"
+                                   FontSize="11" Foreground="#B2DFDB"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,3,0,0" TextWrapping="Wrap"
+                                   TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerPdf"
+                                   FontSize="10" Foreground="#B2DFDB" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Button>
+
             </WrapPanel>
         </ScrollViewer>
 

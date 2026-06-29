@@ -4,7 +4,7 @@
 
     <!-- Header -->
     <sys:String x:Key="AppTitle">Senior Hub</sys:String>
-    <sys:String x:Key="AppSubtitle">Five apps — everything you need every day</sys:String>
+    <sys:String x:Key="AppSubtitle">Six apps — everything you need every day</sys:String>
 
     <!-- Tiles -->
     <sys:String x:Key="TileFood">Food</sys:String>
@@ -26,6 +26,10 @@
     <sys:String x:Key="TileAudio">Audiobooks</sys:String>
     <sys:String x:Key="TileAudioSub">Text to speech</sys:String>
     <sys:String x:Key="TileAudioTip">Text to audiobook converter</sys:String>
+
+    <sys:String x:Key="TilePdf">Documents</sys:String>
+    <sys:String x:Key="TilePdfSub">Build PDF</sys:String>
+    <sys:String x:Key="TilePdfTip">PDF Drive — combine PDFs, photos, text and Word into one file</sys:String>
 
     <!-- Footer -->
     <sys:String x:Key="VersionLabel">Version</sys:String>
