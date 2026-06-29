@@ -4,7 +4,7 @@
 
     <!-- Шапка -->
     <sys:String x:Key="AppTitle">Офис пенсионера</sys:String>
-    <sys:String x:Key="AppSubtitle">Шесть программ — всё что нужно каждый день</sys:String>
+    <sys:String x:Key="AppSubtitle">Семь программ — всё что нужно каждый день</sys:String>
 
     <!-- Плитки -->
     <sys:String x:Key="TileFood">Еда</sys:String>
@@ -30,6 +30,10 @@
     <sys:String x:Key="TilePdf">Документы</sys:String>
     <sys:String x:Key="TilePdfSub">Сборка PDF</sys:String>
     <sys:String x:Key="TilePdfTip">PDF Drive — объединение PDF, фото, текста и Word в один файл</sys:String>
+
+    <sys:String x:Key="TileUtil">Коммуналка</sys:String>
+    <sys:String x:Key="TileUtilSub">Счета и оплата</sys:String>
+    <sys:String x:Key="TileUtilTip">Коммунальные счета — справочник предприятий, лицевые счета и оплата через банк</sys:String>
 
     <!-- Подвал -->
     <sys:String x:Key="VersionLabel">Версия</sys:String>

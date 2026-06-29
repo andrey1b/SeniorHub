@@ -64,6 +64,15 @@ public partial class MainWindow : Window
                 @"PdfDrive\bin\Release\net9.0-windows\win-x64\PdfDrive.exe",
                 @"PdfDrive\bin\Debug\net9.0-windows\win-x64\PdfDrive.exe",
             ]),
+
+        ["CommunalBills"] = new AppConfig(
+            ResKey: "TileUtil",
+            GitHubRepo: "andrey1b/CommunalBills",
+            ExeName: "CommunalBills.exe",
+            DevPaths: [
+                @"CommunalBills\bin\Release\net9.0-windows\win-x64\publish\CommunalBills.exe",
+                @"CommunalBills\bin\Debug\net9.0-windows\CommunalBills.exe",
+            ]),
     };
 
     private readonly string? _appsRoot = ResolveAppsRoot();
@@ -94,6 +103,7 @@ public partial class MainWindow : Window
             ("TakingMedications", VerMeds),
             ("TextToAudiobook",   VerAudio),
             ("PdfDrive",          VerPdf),
+            ("CommunalBills",     VerUtil),
         };
 
         foreach (var (key, tb) in tiles)
@@ -142,6 +152,7 @@ public partial class MainWindow : Window
     private async void LaunchMeds(object sender, RoutedEventArgs e)             => await Launch("TakingMedications");
     private async void LaunchAudio(object sender, RoutedEventArgs e)            => await Launch("TextToAudiobook");
     private async void LaunchPdf(object sender, RoutedEventArgs e)              => await Launch("PdfDrive");
+    private async void LaunchUtil(object sender, RoutedEventArgs e)             => await Launch("CommunalBills");
 
     // ── основная логика ──────────────────────────────────────────────────────
 

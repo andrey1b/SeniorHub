@@ -234,6 +234,27 @@
                     </StackPanel>
                 </Button>
 
+                <!-- Коммуналка (CommunalBills) -->
+                <Button Style="{StaticResource TileStyle}" Background="#00695C"
+                        Click="LaunchUtil"
+                        ToolTip="{DynamicResource TileUtilTip}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="💡" FontSize="44" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource TileUtil}"
+                                   FontSize="17" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="{DynamicResource TileUtilSub}"
+                                   FontSize="11" Foreground="#80CBC4"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,3,0,0" TextWrapping="Wrap"
+                                   TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerUtil"
+                                   FontSize="10" Foreground="#80CBC4" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Button>
+
             </WrapPanel>
         </ScrollViewer>
 
