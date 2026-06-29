@@ -255,6 +255,27 @@
                     </StackPanel>
                 </Button>
 
+                <!-- Моя биография (MyBiography) -->
+                <Button Style="{StaticResource TileStyle}" Background="#5D4037"
+                        Click="LaunchBio"
+                        ToolTip="{DynamicResource TileBioTip}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="📖" FontSize="44" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource TileBio}"
+                                   FontSize="17" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="{DynamicResource TileBioSub}"
+                                   FontSize="11" Foreground="#D7CCC8"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,3,0,0" TextWrapping="Wrap"
+                                   TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerBio"
+                                   FontSize="10" Foreground="#D7CCC8" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Button>
+
             </WrapPanel>
         </ScrollViewer>
 
