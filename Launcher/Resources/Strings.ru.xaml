@@ -4,7 +4,7 @@
 
     <!-- Шапка -->
     <sys:String x:Key="AppTitle">Офис пенсионера</sys:String>
-    <sys:String x:Key="AppSubtitle">Восемь программ — всё что нужно каждый день</sys:String>
+    <sys:String x:Key="AppSubtitle">Девять программ — всё что нужно каждый день</sys:String>
 
     <!-- Плитки -->
     <sys:String x:Key="TileFood">Еда</sys:String>
@@ -38,6 +38,10 @@
     <sys:String x:Key="TileBio">Биография</sys:String>
     <sys:String x:Key="TileBioSub">История жизни</sys:String>
     <sys:String x:Key="TileBioTip">Моя биография — рассказ о своей жизни → красивый PDF, генеалогическая вики или черновик для Википедии</sys:String>
+
+    <sys:String x:Key="TileTools">Утилиты</sys:String>
+    <sys:String x:Key="TileToolsSub">Раскладка, OCR</sys:String>
+    <sys:String x:Key="TileToolsTip">Сборник утилит: исправление раскладки (Pause/Break) и распознавание текста со снимка экрана (OCR)</sys:String>
 
     <!-- Подвал -->
     <sys:String x:Key="VersionLabel">Версия</sys:String>

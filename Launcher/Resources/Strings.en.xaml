@@ -4,7 +4,7 @@
 
     <!-- Header -->
     <sys:String x:Key="AppTitle">Senior Hub</sys:String>
-    <sys:String x:Key="AppSubtitle">Eight apps — everything you need every day</sys:String>
+    <sys:String x:Key="AppSubtitle">Nine apps — everything you need every day</sys:String>
 
     <!-- Tiles -->
     <sys:String x:Key="TileFood">Food</sys:String>
@@ -38,6 +38,10 @@
     <sys:String x:Key="TileBio">Biography</sys:String>
     <sys:String x:Key="TileBioSub">Life story</sys:String>
     <sys:String x:Key="TileBioTip">My Biography — tell your life story → a nice PDF, a genealogy wiki, or a Wikipedia draft</sys:String>
+
+    <sys:String x:Key="TileTools">Tools</sys:String>
+    <sys:String x:Key="TileToolsSub">Layout, OCR</sys:String>
+    <sys:String x:Key="TileToolsTip">Toolbox: keyboard layout fix (Pause/Break) and screen text recognition (OCR)</sys:String>
 
     <!-- Footer -->
     <sys:String x:Key="VersionLabel">Version</sys:String>

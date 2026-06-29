@@ -276,6 +276,27 @@
                     </StackPanel>
                 </Button>
 
+                <!-- Утилиты (Utilities) -->
+                <Button Style="{StaticResource TileStyle}" Background="#455A64"
+                        Click="LaunchTools"
+                        ToolTip="{DynamicResource TileToolsTip}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="🧰" FontSize="44" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{DynamicResource TileTools}"
+                                   FontSize="17" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="{DynamicResource TileToolsSub}"
+                                   FontSize="11" Foreground="#CFD8DC"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,3,0,0" TextWrapping="Wrap"
+                                   TextAlignment="Center" MaxWidth="120"/>
+                        <TextBlock x:Name="VerTools"
+                                   FontSize="10" Foreground="#CFD8DC" Opacity="0.75"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Button>
+
             </WrapPanel>
         </ScrollViewer>
 

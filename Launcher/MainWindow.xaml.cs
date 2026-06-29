@@ -82,6 +82,15 @@ public partial class MainWindow : Window
                 @"MyBiography\bin\Release\net9.0-windows\win-x64\publish\MyBiography.exe",
                 @"MyBiography\bin\Debug\net9.0-windows\MyBiography.exe",
             ]),
+
+        ["Utilities"] = new AppConfig(
+            ResKey: "TileTools",
+            GitHubRepo: "andrey1b/Utilities",
+            ExeName: "Utilities.exe",
+            DevPaths: [
+                @"Utilities\bin\Release\net9.0-windows10.0.19041.0\win-x64\publish\Utilities.exe",
+                @"Utilities\bin\Debug\net9.0-windows10.0.19041.0\win-x64\Utilities.exe",
+            ]),
     };
 
     private readonly string? _appsRoot = ResolveAppsRoot();
@@ -114,6 +123,7 @@ public partial class MainWindow : Window
             ("PdfDrive",          VerPdf),
             ("CommunalBills",     VerUtil),
             ("MyBiography",        VerBio),
+            ("Utilities",         VerTools),
         };
 
         foreach (var (key, tb) in tiles)
@@ -164,6 +174,7 @@ public partial class MainWindow : Window
     private async void LaunchPdf(object sender, RoutedEventArgs e)              => await Launch("PdfDrive");
     private async void LaunchUtil(object sender, RoutedEventArgs e)             => await Launch("CommunalBills");
     private async void LaunchBio(object sender, RoutedEventArgs e)              => await Launch("MyBiography");
+    private async void LaunchTools(object sender, RoutedEventArgs e)            => await Launch("Utilities");
 
     // ── основная логика ──────────────────────────────────────────────────────
 
