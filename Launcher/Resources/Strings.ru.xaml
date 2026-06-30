@@ -62,10 +62,10 @@
 
     <!-- Резервное копирование -->
     <sys:String x:Key="BackupGroupLabel">Резервное копирование</sys:String>
-    <sys:String x:Key="BackupHint">Сохраните копию своих данных на флешку или в «Документы». Программа также делает копии автоматически каждый день.</sys:String>
+    <sys:String x:Key="BackupHint">Сохраните копию данных всех программ на флешку или в «Документы». Программа также делает копии автоматически каждый день.</sys:String>
     <sys:String x:Key="BtnBackup">Сохранить копию…</sys:String>
     <sys:String x:Key="BtnRestore">Восстановить из копии…</sys:String>
-    <sys:String x:Key="BackupFileFilter">Резервная копия (*.db)</sys:String>
+    <sys:String x:Key="BackupFileFilter">Резервная копия</sys:String>
     <sys:String x:Key="BackupDone">Резервная копия успешно сохранена.</sys:String>
     <sys:String x:Key="BackupFailed">Не удалось сохранить копию:</sys:String>
     <sys:String x:Key="RestoreConfirm">Текущие данные будут заменены данными из копии. Продолжить?</sys:String>

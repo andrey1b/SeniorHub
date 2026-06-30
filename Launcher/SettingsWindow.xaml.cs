@@ -36,10 +36,10 @@ public partial class SettingsWindow : Window
         var dlg = new SaveFileDialog
         {
             Title    = Res("BtnBackup"),
-            FileName = $"Офис_пенсионера_копия_{DateTime.Now:yyyy-MM-dd}.db",
-            Filter   = Res("BackupFileFilter") + "|*.db",
+            FileName = $"Офис_пенсионера_копия_{DateTime.Now:yyyy-MM-dd}.zip",
+            Filter   = Res("BackupFileFilter") + "|*.zip",
             AddExtension = true,
-            DefaultExt   = "db"
+            DefaultExt   = "zip"
         };
         if (dlg.ShowDialog(this) != true) return;
 
@@ -61,7 +61,7 @@ public partial class SettingsWindow : Window
         var dlg = new OpenFileDialog
         {
             Title  = Res("BtnRestore"),
-            Filter = Res("BackupFileFilter") + "|*.db",
+            Filter = Res("BackupFileFilter") + "|*.zip;*.db",
             CheckFileExists = true
         };
         if (dlg.ShowDialog(this) != true) return;

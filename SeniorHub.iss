@@ -1,5 +1,5 @@
 #define MyAppName "SeniorHub"
-#define MyAppVersion "1.6.1"
+#define MyAppVersion "1.7.0"
 #define MyAppPublisher "andrey1b"
 #define MyAppURL "https://github.com/andrey1b/SeniorHub"
 #define MyAppExeName "SeniorHub.exe"

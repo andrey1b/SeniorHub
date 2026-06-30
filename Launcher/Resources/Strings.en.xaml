@@ -62,10 +62,10 @@
 
     <!-- Backup -->
     <sys:String x:Key="BackupGroupLabel">Backup</sys:String>
-    <sys:String x:Key="BackupHint">Save a copy of your data to a USB drive or Documents. The program also makes copies automatically every day.</sys:String>
+    <sys:String x:Key="BackupHint">Save a copy of all your apps' data to a USB drive or Documents. The program also makes copies automatically every day.</sys:String>
     <sys:String x:Key="BtnBackup">Save a copy…</sys:String>
     <sys:String x:Key="BtnRestore">Restore from a copy…</sys:String>
-    <sys:String x:Key="BackupFileFilter">Backup file (*.db)</sys:String>
+    <sys:String x:Key="BackupFileFilter">Backup file</sys:String>
     <sys:String x:Key="BackupDone">Backup saved successfully.</sys:String>
     <sys:String x:Key="BackupFailed">Failed to save the copy:</sys:String>
     <sys:String x:Key="RestoreConfirm">Current data will be replaced with the data from the copy. Continue?</sys:String>
