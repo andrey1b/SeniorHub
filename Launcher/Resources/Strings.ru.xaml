@@ -43,6 +43,9 @@
     <sys:String x:Key="TileToolsSub">Раскладка, OCR</sys:String>
     <sys:String x:Key="TileToolsTip">Сборник утилит: исправление раскладки (Pause/Break) и распознавание текста со снимка экрана (OCR)</sys:String>
 
+    <!-- Инфо-блок установленных программ -->
+    <sys:String x:Key="InfoHeader">Установленные программы:</sys:String>
+
     <!-- Подвал -->
     <sys:String x:Key="VersionLabel">Версия</sys:String>
     <sys:String x:Key="FooterInfo">Все данные хранятся локально на этом компьютере</sys:String>

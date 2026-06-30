@@ -43,6 +43,9 @@
     <sys:String x:Key="TileToolsSub">Layout, OCR</sys:String>
     <sys:String x:Key="TileToolsTip">Toolbox: keyboard layout fix (Pause/Break) and screen text recognition (OCR)</sys:String>
 
+    <!-- Installed-programs info block -->
+    <sys:String x:Key="InfoHeader">Installed programs:</sys:String>
+
     <!-- Footer -->
     <sys:String x:Key="VersionLabel">Version</sys:String>
     <sys:String x:Key="FooterInfo">All data is stored locally on this computer</sys:String>

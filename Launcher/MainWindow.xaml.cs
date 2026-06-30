@@ -3,6 +3,9 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 using Microsoft.Win32;
 
 namespace OfisPensionera.Launcher;
@@ -109,6 +112,7 @@ public partial class MainWindow : Window
         RefreshVersionText();
         RefreshSubtitle();
         RefreshTileVersions();
+        RefreshInfoPanel();
         await AutoCheckUpdatesAsync();
     }
 
@@ -195,12 +199,55 @@ public partial class MainWindow : Window
 
         foreach (var (key, tb) in tiles)
         {
-            var exe = FindExe(Apps[key]);
-            if (exe is null) continue;
-            var vi = FileVersionInfo.GetVersionInfo(exe);
-            if (vi.FileMajorPart == 0 && vi.FileMinorPart == 0) continue;
-            tb.Text = $"v{vi.FileMajorPart}.{vi.FileMinorPart}.{vi.FileBuildPart}";
+            var ver = ResolveStatus(Apps[key]).Version;
+            if (!string.IsNullOrEmpty(ver)) tb.Text = $"v{ver}";
         }
+    }
+
+    // Инфо-блок: одна строка на программу — «Name» установлена ДД.ММ.ГГГГ. Версия x. Папка(ссылка)
+    private void RefreshInfoPanel()
+    {
+        InfoList.Children.Clear();
+        bool ru = App.CurrentLanguage != "en";
+        var normal = new SolidColorBrush(Color.FromRgb(0x33, 0x50, 0x3A));
+        var dim    = new SolidColorBrush(Color.FromRgb(0x9A, 0xA8, 0x9A));
+        normal.Freeze(); dim.Freeze();
+
+        foreach (var cfg in Apps.Values)
+        {
+            var name = Res(cfg.ResKey);
+            var st = ResolveStatus(cfg);
+            var line = new TextBlock { FontSize = 11, Margin = new Thickness(0, 1, 0, 1),
+                                       TextTrimming = TextTrimming.CharacterEllipsis };
+
+            if (st.Installed)
+            {
+                var date = st.InstallDate?.ToString("dd.MM.yyyy") ?? "—";
+                var ver  = st.Version ?? "—";
+                line.Foreground = normal;
+                line.Inlines.Add(new Run(ru
+                    ? $"«{name}» установлена {date}. Версия {ver}. "
+                    : $"“{name}” installed {date}. Version {ver}. "));
+                var link = new Hyperlink(new Run(ru ? "Папка" : "Folder"));
+                var folder = st.Folder;
+                link.Click += (_, _) => OpenFolder(folder);
+                line.Inlines.Add(link);
+            }
+            else
+            {
+                line.Foreground = dim;
+                line.Inlines.Add(new Run(ru ? $"«{name}» — не установлена"
+                                            : $"“{name}” — not installed"));
+            }
+            InfoList.Children.Add(line);
+        }
+    }
+
+    private static void OpenFolder(string? folder)
+    {
+        if (string.IsNullOrEmpty(folder) || !Directory.Exists(folder)) return;
+        try { Process.Start(new ProcessStartInfo(folder) { UseShellExecute = true }); }
+        catch { /* папка недоступна */ }
     }
 
     internal void RefreshVersionText()
@@ -229,6 +276,7 @@ public partial class MainWindow : Window
         new SettingsWindow { Owner = this }.ShowDialog();
         RefreshVersionText();
         RefreshSubtitle();
+        RefreshInfoPanel();
     }
 
     // ── обработчики плиток ───────────────────────────────────────────────────
@@ -292,48 +340,73 @@ public partial class MainWindow : Window
         }
     }
 
-    private string? FindExe(AppConfig cfg)
+    // Статус модуля: путь к exe, папка установки, версия, дата установки.
+    internal sealed record ModuleStatus(string? ExePath, string? Folder, string? Version, DateTime? InstallDate)
+    {
+        public bool Installed => ExePath is not null;
+    }
+
+    private string? FindExe(AppConfig cfg) => ResolveStatus(cfg).ExePath;
+
+    // Ищет модуль: сначала dev-пути, затем записи Inno Setup в реестре —
+    // HKLM (64 и 32-бит) И HKCU (установка «для текущего пользователя», напр. MenuApp).
+    internal ModuleStatus ResolveStatus(AppConfig cfg)
     {
         // 1. dev-пути относительно appsRoot
         if (_appsRoot is not null)
-        {
             foreach (string rel in cfg.DevPaths)
             {
                 string full = Path.GetFullPath(Path.Combine(_appsRoot, rel));
-                if (File.Exists(full)) return full;
+                if (File.Exists(full))
+                    return new ModuleStatus(full, Path.GetDirectoryName(full), FileVer(full), SafeWriteTime(full));
             }
-        }
 
-        // 2. поиск по реестру (uninstall entries от Inno Setup)
-        string? fromRegistry = FindInRegistry(cfg.ExeName);
-        if (fromRegistry is not null) return fromRegistry;
-
-        return null;
-    }
-
-    private static string? FindInRegistry(string exeName)
-    {
-        string[] hives =
+        // 2. реестр uninstall: все ветки
+        (RegistryKey Root, string Path)[] roots =
         [
-            @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-            @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+            (Registry.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"),
+            (Registry.LocalMachine, @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"),
+            (Registry.CurrentUser,  @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"),
         ];
 
-        foreach (var hivePath in hives)
+        foreach (var (root, path) in roots)
         {
-            using var key = Registry.LocalMachine.OpenSubKey(hivePath);
+            using var key = root.OpenSubKey(path);
             if (key is null) continue;
             foreach (var name in key.GetSubKeyNames())
             {
                 using var sub = key.OpenSubKey(name);
-                var dir = sub?.GetValue("InstallLocation") as string;
-                if (string.IsNullOrEmpty(dir)) continue;
-                string candidate = Path.Combine(dir, exeName);
-                if (File.Exists(candidate)) return candidate;
+                if (sub?.GetValue("InstallLocation") is not string dir || string.IsNullOrEmpty(dir)) continue;
+                string candidate = Path.Combine(dir, cfg.ExeName);
+                if (!File.Exists(candidate)) continue;
+
+                var ver  = sub.GetValue("DisplayVersion") as string ?? FileVer(candidate);
+                var date = ParseInstallDate(sub.GetValue("InstallDate") as string) ?? SafeWriteTime(candidate);
+                return new ModuleStatus(candidate, dir.TrimEnd('\\'), ver, date);
             }
         }
-        return null;
+        return new ModuleStatus(null, null, null, null);
     }
+
+    private static string? FileVer(string exe)
+    {
+        try
+        {
+            var vi = FileVersionInfo.GetVersionInfo(exe);
+            if (vi.FileMajorPart == 0 && vi.FileMinorPart == 0 && vi.FileBuildPart == 0) return null;
+            return $"{vi.FileMajorPart}.{vi.FileMinorPart}.{vi.FileBuildPart}";
+        }
+        catch { return null; }
+    }
+
+    private static DateTime? SafeWriteTime(string path)
+    {
+        try { return File.GetLastWriteTime(path); } catch { return null; }
+    }
+
+    private static DateTime? ParseInstallDate(string? s)
+        => DateTime.TryParseExact(s, "yyyyMMdd", null,
+               System.Globalization.DateTimeStyles.None, out var d) ? d : null;
 
     private static void TryStart(string path, string displayName)
     {
