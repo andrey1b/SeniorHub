@@ -109,7 +109,23 @@ public partial class MainWindow : Window
         RefreshVersionText();
         RefreshSubtitle();
         RefreshTileVersions();
-        _ = await Updater.CheckSeniorHubUpdateAsync();
+        await AutoCheckUpdatesAsync();
+    }
+
+    // Тихая автопроверка всех программ при запуске — не чаще раза в день, в фоне.
+    // Если обновлений нет — ничего не показывает; если есть — тот же список с предложением обновить.
+    private async Task AutoCheckUpdatesAsync()
+    {
+        try
+        {
+            var today = DateTime.Today.ToString("yyyy-MM-dd");
+            if (SharedDb.GetSetting("last_update_check") == today) return; // сегодня уже проверяли
+
+            await Task.Delay(2500);                          // не мешать открытию окна
+            SharedDb.SetSetting("last_update_check", today); // отметить проверку (даже если офлайн — не дёргаем повторно)
+            await CheckAllUpdatesAsync();                    // молча при отсутствии обновлений
+        }
+        catch { /* нет сети / прочее — тихо игнорируем */ }
     }
 
     // Проверка обновлений всех модулей + лаунчера, список, и обновление всех (один UAC, тихо).
