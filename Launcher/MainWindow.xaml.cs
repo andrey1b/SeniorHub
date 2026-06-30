@@ -216,6 +216,33 @@ public partial class MainWindow : Window
         var dim    = new SolidColorBrush(Color.FromRgb(0x9A, 0xA8, 0x9A));
         normal.Freeze(); dim.Freeze();
 
+        // «Деньги» (HomeAccounting) — общий журнал расходов: остальные программы читают расходы оттуда.
+        // Сверху — подсказка, а если «Деньги» не установлены — заметное предупреждение.
+        if (Apps.TryGetValue("HomeAccounting", out var moneyCfg))
+        {
+            var hint = new TextBlock
+            {
+                FontSize = 11, Margin = new Thickness(0, 1, 0, 5),
+                TextWrapping = TextWrapping.Wrap
+            };
+            if (ResolveStatus(moneyCfg).Installed)
+            {
+                hint.Foreground = normal;
+                hint.Inlines.Add(new Run(ru
+                    ? "💰 «Деньги» — общий журнал расходов: «Таблетки», «Огород», «Еда» и «Коммуналка» берут расходы отсюда."
+                    : "💰 “Money” is the shared expense log — Meds, Garden, Food and Utilities read expenses from it."));
+            }
+            else
+            {
+                var warn = new SolidColorBrush(Color.FromRgb(0xC6, 0x28, 0x28)); warn.Freeze();
+                hint.Foreground = warn; hint.FontWeight = FontWeights.Bold;
+                hint.Inlines.Add(new Run(ru
+                    ? "⚠ Установите «Деньги» — без них «Таблетки», «Огород», «Еда» и «Коммуналка» не покажут расходы."
+                    : "⚠ Install “Money” — without it Meds, Garden, Food and Utilities can't show expenses."));
+            }
+            InfoList.Children.Add(hint);
+        }
+
         foreach (var cfg in Apps.Values)
         {
             var name = Res(cfg.ResKey);
