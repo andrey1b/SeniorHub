@@ -143,7 +143,10 @@ public partial class MainWindow : Window
         var refs = new List<Updater.AppRef>();
         foreach (var cfg in Apps.Values)
             if (cfg.GitHubRepo is not null)
-                refs.Add(new Updater.AppRef(Res(cfg.ResKey), cfg.GitHubRepo, FindExe(cfg), false));
+            {
+                var st = ResolveStatus(cfg);
+                refs.Add(new Updater.AppRef(Res(cfg.ResKey), cfg.GitHubRepo, st.ExePath, false, st.Version));
+            }
         refs.Add(new Updater.AppRef("Senior Hub", "andrey1b/SeniorHub", launcherExe, IsLauncher: true));
 
         var ups = await Updater.CheckUpdatesAsync(refs);
@@ -241,6 +244,13 @@ public partial class MainWindow : Window
             }
             InfoList.Children.Add(line);
         }
+    }
+
+    // Кнопка «🔄» — пересканировать установленные программы (без перезапуска лаунчера)
+    private void RefreshInstalled_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshTileVersions();
+        RefreshInfoPanel();
     }
 
     private static void OpenFolder(string? folder)
@@ -385,6 +395,31 @@ public partial class MainWindow : Window
                 return new ModuleStatus(candidate, dir.TrimEnd('\\'), ver, date);
             }
         }
+
+        // 3. fallback: само-обновляемые приложения (Velopack/Squirrel) в %LOCALAPPDATA%\<Имя>\,
+        //    без записи в реестре, с версионными именами exe (напр. GardenPlanner-4.5.0.exe).
+        var baseName = Path.GetFileNameWithoutExtension(cfg.ExeName);
+        var localDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), baseName);
+        if (Directory.Exists(localDir))
+        {
+            string? exe = File.Exists(Path.Combine(localDir, cfg.ExeName))
+                ? Path.Combine(localDir, cfg.ExeName) : null;
+            Version? best = null;
+            foreach (var f in Directory.EnumerateFiles(localDir, baseName + "*.exe"))
+            {
+                var fn = Path.GetFileName(f);
+                if (fn.Contains("Setup", StringComparison.OrdinalIgnoreCase) ||
+                    fn.Contains("Update", StringComparison.OrdinalIgnoreCase) ||
+                    fn.Contains("Uninstall", StringComparison.OrdinalIgnoreCase)) continue;
+                exe ??= f; // если нет «плоского» exe — берём версионный
+                var m = System.Text.RegularExpressions.Regex.Match(fn, @"\d+(\.\d+){1,3}");
+                if (m.Success && Version.TryParse(m.Value, out var v) && (best is null || v > best)) best = v;
+            }
+            if (exe is not null)
+                return new ModuleStatus(exe, localDir, best?.ToString() ?? FileVer(exe), SafeWriteTime(exe));
+        }
+
         return new ModuleStatus(null, null, null, null);
     }
 

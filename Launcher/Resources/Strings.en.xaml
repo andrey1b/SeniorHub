@@ -45,6 +45,7 @@
 
     <!-- Installed-programs info block -->
     <sys:String x:Key="InfoHeader">Installed programs:</sys:String>
+    <sys:String x:Key="InfoRefreshTip">Refresh installed-programs info</sys:String>
 
     <!-- Footer -->
     <sys:String x:Key="VersionLabel">Version</sys:String>

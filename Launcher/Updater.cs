@@ -99,7 +99,7 @@ static class Updater
 
     // ── Проверка обновлений всех модулей + лаунчера ─────────────────────────
 
-    public record AppRef(string Name, string Repo, string? ExePath, bool IsLauncher = false);
+    public record AppRef(string Name, string Repo, string? ExePath, bool IsLauncher = false, string? InstalledVersion = null);
     public record ModuleUpdate(AppRef App, string Installed, string Latest, string AssetName, string AssetUrl);
 
     /// Опрашивает релизы переданных приложений и возвращает те, где есть новая версия.
@@ -117,8 +117,16 @@ static class Updater
                     $"https://api.github.com/repos/{app.Repo}/releases/latest");
                 if (release is null || !TryParseVersion(release.TagName, out var latest)) continue;
 
-                var vi = FileVersionInfo.GetVersionInfo(app.ExePath);
-                var installed = new Version(vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart);
+                // Версия установленного: сперва переданная из детекта (учитывает спец-случаи
+                // вроде GardenPlanner с неверным FileVersion), иначе — из FileVersionInfo.
+                Version installed;
+                if (!string.IsNullOrEmpty(app.InstalledVersion) && TryParseVersion(app.InstalledVersion, out var iv))
+                    installed = iv;
+                else
+                {
+                    var vi = FileVersionInfo.GetVersionInfo(app.ExePath);
+                    installed = new Version(vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart);
+                }
                 if (latest <= installed) continue;
 
                 var asset = release.Assets.FirstOrDefault(a =>
