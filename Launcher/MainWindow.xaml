@@ -312,6 +312,11 @@
                                     Padding="6,1" Background="Transparent" BorderThickness="0" Focusable="False">
                                 <TextBlock Text="🔄" FontSize="13"/>
                             </Button>
+                            <Button DockPanel.Dock="Right" x:Name="BtnUpdateAll" Click="UpdateAll_Click"
+                                    Content="{DynamicResource InfoUpdateAll}"
+                                    ToolTip="{DynamicResource InfoUpdateAllTip}" Cursor="Hand"
+                                    Margin="0,0,8,0" Padding="10,2" FontWeight="SemiBold"
+                                    Background="#FF2C5F2D" Foreground="White" BorderThickness="0"/>
                             <TextBlock Text="{DynamicResource InfoHeader}" FontWeight="SemiBold"
                                        Foreground="#FF2C5F2D" FontSize="12" VerticalAlignment="Center"/>
                         </DockPanel>

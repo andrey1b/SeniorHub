@@ -134,6 +134,30 @@ public partial class MainWindow : Window
 
     // Проверка обновлений всех модулей + лаунчера, список, и обновление всех (один UAC, тихо).
     // Возвращает true, если найдены доступные обновления (иначе вызывающий покажет «обновлений нет»).
+    // Статус обновлений — заполняется после проверки, используется для подписей в инфо-панели
+    private bool _updateChecked;
+    private readonly HashSet<string> _outdated = new();
+    private readonly Dictionary<string, string> _latest = new();
+
+    // Кнопка «Обновить все» в шапке инфо-блока: проверить → подписать статус → предложить обновить
+    private async void UpdateAll_Click(object sender, RoutedEventArgs e)
+    {
+        BtnUpdateAll.IsEnabled = false;
+        BtnUpdateAll.Content   = Res("InfoChecking");
+        try
+        {
+            bool found = await CheckAllUpdatesAsync();
+            if (!found)
+                MessageBox.Show(this, Res("InfoAllUpToDate"), "SeniorHub",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        finally
+        {
+            BtnUpdateAll.SetResourceReference(System.Windows.Controls.ContentControl.ContentProperty, "InfoUpdateAll");
+            BtnUpdateAll.IsEnabled = true;
+        }
+    }
+
     internal async Task<bool> CheckAllUpdatesAsync()
     {
         string launcherExe;
@@ -150,6 +174,13 @@ public partial class MainWindow : Window
         refs.Add(new Updater.AppRef("Senior Hub", "andrey1b/SeniorHub", launcherExe, IsLauncher: true));
 
         var ups = await Updater.CheckUpdatesAsync(refs);
+
+        // Запомнить статус и подписать строки инфо-панели («последняя версия» / «доступно X»)
+        _updateChecked = true;
+        _outdated.Clear(); _latest.Clear();
+        foreach (var u in ups) { _outdated.Add(u.App.Name); _latest[u.App.Name] = u.Latest; }
+        RefreshInfoPanel();
+
         if (ups.Count == 0) return false;
 
         bool ru = App.CurrentLanguage != "en";
@@ -262,6 +293,23 @@ public partial class MainWindow : Window
                 var folder = st.Folder;
                 link.Click += (_, _) => OpenFolder(folder);
                 line.Inlines.Add(link);
+
+                // Статус обновления (после нажатия «Обновить все»)
+                if (_updateChecked)
+                {
+                    if (_outdated.Contains(name) && _latest.TryGetValue(name, out var latest))
+                    {
+                        var upd = new SolidColorBrush(Color.FromRgb(0xC6, 0x28, 0x28)); upd.Freeze();
+                        line.Inlines.Add(new Run(ru ? $"   — доступно {latest}" : $"   — update {latest}")
+                            { Foreground = upd, FontWeight = FontWeights.Bold });
+                    }
+                    else
+                    {
+                        var ok = new SolidColorBrush(Color.FromRgb(0x2E, 0x7D, 0x32)); ok.Freeze();
+                        line.Inlines.Add(new Run(ru ? "   — последняя версия" : "   — up to date")
+                            { Foreground = ok });
+                    }
+                }
             }
             else
             {

@@ -46,6 +46,10 @@
     <!-- Инфо-блок установленных программ -->
     <sys:String x:Key="InfoHeader">Установленные программы:</sys:String>
     <sys:String x:Key="InfoRefreshTip">Обновить сведения об установленных программах</sys:String>
+    <sys:String x:Key="InfoUpdateAll">⬇ Обновить все</sys:String>
+    <sys:String x:Key="InfoUpdateAllTip">Проверить обновления и обновить все программы сразу</sys:String>
+    <sys:String x:Key="InfoChecking">Проверяю…</sys:String>
+    <sys:String x:Key="InfoAllUpToDate">Все программы обновлены до последней версии.</sys:String>
 
     <!-- Подвал -->
     <sys:String x:Key="VersionLabel">Версия</sys:String>

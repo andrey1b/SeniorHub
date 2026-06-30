@@ -46,6 +46,10 @@
     <!-- Installed-programs info block -->
     <sys:String x:Key="InfoHeader">Installed programs:</sys:String>
     <sys:String x:Key="InfoRefreshTip">Refresh installed-programs info</sys:String>
+    <sys:String x:Key="InfoUpdateAll">⬇ Update all</sys:String>
+    <sys:String x:Key="InfoUpdateAllTip">Check for updates and update all programs at once</sys:String>
+    <sys:String x:Key="InfoChecking">Checking…</sys:String>
+    <sys:String x:Key="InfoAllUpToDate">All programs are up to date.</sys:String>
 
     <!-- Footer -->
     <sys:String x:Key="VersionLabel">Version</sys:String>
