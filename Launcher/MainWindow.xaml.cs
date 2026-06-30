@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 using Microsoft.Win32;
 
@@ -109,6 +110,56 @@ public partial class MainWindow : Window
         RefreshSubtitle();
         RefreshTileVersions();
         _ = await Updater.CheckSeniorHubUpdateAsync();
+    }
+
+    // Проверка обновлений всех модулей + лаунчера, список, и обновление всех (один UAC, тихо).
+    // Возвращает true, если найдены доступные обновления (иначе вызывающий покажет «обновлений нет»).
+    internal async Task<bool> CheckAllUpdatesAsync()
+    {
+        string launcherExe;
+        try { launcherExe = Process.GetCurrentProcess().MainModule!.FileName!; }
+        catch { launcherExe = Path.Combine(AppContext.BaseDirectory, "SeniorHub.exe"); }
+
+        var refs = new List<Updater.AppRef>();
+        foreach (var cfg in Apps.Values)
+            if (cfg.GitHubRepo is not null)
+                refs.Add(new Updater.AppRef(Res(cfg.ResKey), cfg.GitHubRepo, FindExe(cfg), false));
+        refs.Add(new Updater.AppRef("Senior Hub", "andrey1b/SeniorHub", launcherExe, IsLauncher: true));
+
+        var ups = await Updater.CheckUpdatesAsync(refs);
+        if (ups.Count == 0) return false;
+
+        bool ru = App.CurrentLanguage != "en";
+        var sb = new StringBuilder();
+        sb.AppendLine(ru ? "Доступны обновления:" : "Updates available:");
+        sb.AppendLine();
+        foreach (var u in ups) sb.AppendLine($"   •  {u.App.Name}:   {u.Installed} → {u.Latest}");
+        sb.AppendLine();
+        sb.AppendLine(ru
+            ? "Обновить все сейчас? Будет один запрос прав администратора, установка пройдёт автоматически."
+            : "Update all now? One administrator prompt; everything installs automatically.");
+
+        if (MessageBox.Show(this, sb.ToString(), "SeniorHub",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            return true; // обновления есть, но пользователь отказался — «обновлений нет» не показываем
+
+        try
+        {
+            bool launcherWillRestart = await Updater.UpdateAllAsync(ups, launcherExe);
+            if (launcherWillRestart)
+                Application.Current.Shutdown();   // освободить exe лаунчера; cmd обновит и перезапустит
+            else
+                MessageBox.Show(this,
+                    ru ? "Обновление запущено. Это может занять пару минут."
+                       : "Update started. This may take a couple of minutes.",
+                    "SeniorHub", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            MessageBox.Show(this, ru ? "Обновление отменено." : "Update cancelled.",
+                "SeniorHub", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        return true;
     }
 
     private void RefreshTileVersions()

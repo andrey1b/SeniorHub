@@ -93,13 +93,18 @@ public partial class SettingsWindow : Window
     private async void CheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         btnCheckUpdates.IsEnabled = false;
-        bool found = await Updater.CheckSeniorHubUpdateAsync();
+        var prev = btnCheckUpdates.Content;
+        btnCheckUpdates.Content = App.CurrentLanguage == "en" ? "Checking…" : "Проверяю…";
+
+        // Полная проверка всех модулей + лаунчера (логика в MainWindow — у него список Apps и FindExe)
+        bool found = Owner is MainWindow mw
+            ? await mw.CheckAllUpdatesAsync()
+            : await Updater.CheckSeniorHubUpdateAsync();
+
+        btnCheckUpdates.Content = prev;
         btnCheckUpdates.IsEnabled = true;
 
         if (!found)
-        {
-            string noUpdates = (string)Application.Current.Resources["MsgNoUpdates"];
-            MessageBox.Show(noUpdates, "SeniorHub", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+            MessageBox.Show(Res("MsgNoUpdates"), "SeniorHub", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 }
