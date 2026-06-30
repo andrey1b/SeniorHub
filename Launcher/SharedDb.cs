@@ -1,16 +1,29 @@
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using Microsoft.Data.Sqlite;
+using SeniorHub.Data;
 
 namespace OfisPensionera.Launcher;
 
-// Общая SQLite-база %LocalAppData%\SeniorHub\shared.db
-// Читается всеми приложениями офиса по договорённости о пути.
+// Фасад лаунчера над общей базой %LocalAppData%\SeniorHub\shared.db.
+// Доступ к данным (путь, настройки, профиль, соединение) делегируется общей
+// библиотеке SeniorHubData (её копируют и другие программы офиса). Здесь же —
+// резервное копирование ВСЕХ данных Senior Hub (только лаунчер; в общую
+// библиотеку не входит).
 static class SharedDb
 {
-    public static readonly string DbPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "SeniorHub", "shared.db");
+    // ── Делегаты в общую библиотеку SeniorHubData ─────────────────────────────
+
+    public static string DbPath => SeniorHubData.DbPath;
+    public static void Initialize() => SeniorHubData.Initialize();
+    public static string? GetSetting(string key) => SeniorHubData.GetSetting(key);
+    public static void SetSetting(string key, string value) => SeniorHubData.SetSetting(key, value);
+    public static (string? Name, string? BirthDate) GetUserProfile() => SeniorHubData.GetUserProfile();
+    public static void SetUserProfile(string? name, string? birthDate)
+        => SeniorHubData.SetUserProfile(name, birthDate);
+
+    // ── Резервное копирование (только лаунчер) ────────────────────────────────
 
     // Папка для автоматических ежедневных копий
     private static readonly string BackupsDir = Path.Combine(
@@ -18,8 +31,6 @@ static class SharedDb
         "SeniorHub", "Backups");
 
     private const int KeepDailyBackups = 7;   // сколько последних копий хранить
-
-    private static string ConnStr => $"Data Source={DbPath}";
 
     private static string LocalAppData =>
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -41,113 +52,6 @@ static class SharedDb
     private static readonly string GardenLevelDbRel = Path.Combine(
         "GardenPlanner", "app", "GardenPlanner.Maui.exe.WebView2",
         "EBWebView", "Default", "Local Storage", "leveldb");
-
-    public static void Initialize()
-    {
-        try
-        {
-            SQLitePCL.Batteries_V2.Init();
-            Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
-            using var conn = Open();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = """
-                CREATE TABLE IF NOT EXISTS settings (
-                    key   TEXT PRIMARY KEY,
-                    value TEXT NOT NULL
-                );
-                CREATE TABLE IF NOT EXISTS user_profile (
-                    id         INTEGER PRIMARY KEY CHECK(id = 1),
-                    name       TEXT,
-                    birth_date TEXT,
-                    updated_at TEXT DEFAULT (datetime('now'))
-                );
-                INSERT INTO user_profile (id) VALUES (1) ON CONFLICT DO NOTHING;
-                CREATE TABLE IF NOT EXISTS pharmacy_expenses (
-                    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-                    date       TEXT NOT NULL,
-                    amount     REAL NOT NULL,
-                    note       TEXT,
-                    account    TEXT,
-                    created_at TEXT DEFAULT (datetime('now'))
-                );
-                """;
-            cmd.ExecuteNonQuery();
-        }
-        catch { }
-    }
-
-    public static string? GetSetting(string key)
-    {
-        try
-        {
-            using var conn = Open();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT value FROM settings WHERE key = $k";
-            cmd.Parameters.AddWithValue("$k", key);
-            return cmd.ExecuteScalar() as string;
-        }
-        catch { return null; }
-    }
-
-    public static void SetSetting(string key, string value)
-    {
-        try
-        {
-            using var conn = Open();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = """
-                INSERT INTO settings(key,value) VALUES($k,$v)
-                ON CONFLICT(key) DO UPDATE SET value=$v
-                """;
-            cmd.Parameters.AddWithValue("$k", key);
-            cmd.Parameters.AddWithValue("$v", value);
-            cmd.ExecuteNonQuery();
-        }
-        catch { }
-    }
-
-    public static (string? Name, string? BirthDate) GetUserProfile()
-    {
-        try
-        {
-            using var conn = Open();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT name, birth_date FROM user_profile WHERE id = 1";
-            using var r = cmd.ExecuteReader();
-            if (r.Read())
-                return (r.IsDBNull(0) ? null : r.GetString(0),
-                        r.IsDBNull(1) ? null : r.GetString(1));
-        }
-        catch { }
-        return (null, null);
-    }
-
-    public static void SetUserProfile(string? name, string? birthDate)
-    {
-        try
-        {
-            using var conn = Open();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = """
-                UPDATE user_profile
-                SET name=$n, birth_date=$b, updated_at=datetime('now')
-                WHERE id = 1
-                """;
-            cmd.Parameters.AddWithValue("$n", name       ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("$b", birthDate  ?? (object)DBNull.Value);
-            cmd.ExecuteNonQuery();
-        }
-        catch { }
-    }
-
-    private static SqliteConnection Open()
-    {
-        var conn = new SqliteConnection(ConnStr);
-        conn.Open();
-        return conn;
-    }
-
-    // ── Резервное копирование ────────────────────────────────────────────────
 
     /// <summary>
     /// Тихая автоматическая копия ВСЕХ данных SeniorHub при запуске: один
@@ -297,7 +201,7 @@ static class SharedDb
         using var src = new SqliteConnection($"Data Source={sourceDbPath};Mode=ReadOnly");
         src.Open();
         Directory.CreateDirectory(Path.GetDirectoryName(DbPath)!);
-        using var dst = Open();
+        using var dst = SeniorHubData.Open();
         src.BackupDatabase(dst);
     }
 
@@ -305,7 +209,7 @@ static class SharedDb
     // (работает корректно, даже если база открыта другим соединением).
     private static void BackupSharedTo(string destPath)
     {
-        using var src = Open();
+        using var src = SeniorHubData.Open();
         using var dst = new SqliteConnection($"Data Source={destPath}");
         dst.Open();
         src.BackupDatabase(dst);
